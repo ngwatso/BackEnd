@@ -1,12 +1,24 @@
 const express = require("express")
-const users = require("./users-model")
+const router = express.Router()
 
-router.post("/users", (req, res) => {
-	users.add(req.body)
-		.then((user) => {
-			res.status(201).json(user)
-		})
-		.catch((error) => {
-			next(error)
-		})
+
+let users = [
+	{ id: "1", name: "Jane Doe" },
+	{ id: "2", name: "John Doe" },
+	{ id: "3", name: "Jack Doe" },
+]
+
+router.get("/", (req, res) => {
+	res.status(200).json({
+		message: "Welcome to Pintereach-2"
+	})
 })
+
+router.get("/users", (req, res) => {
+	res.status(200).json(users)
+})
+router.get("/auth", (req, res) => {
+	res.status(200).json(users)
+})
+
+module.exports = router;

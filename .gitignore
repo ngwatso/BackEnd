@@ -84,3 +84,6 @@ typings/
 
 # VSCode debugger config
 launch.json
+
+#dotenv enviroment variables file
+.env
