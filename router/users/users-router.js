@@ -1,7 +1,9 @@
 require('dotenv').config()
 const express = require("express")
 const router = express.Router()
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
+const Users = require('../users/users-model');
 
 const posts = [
 	{
@@ -33,6 +35,25 @@ router.post("/api/login",(req, res) => {
 	
 	const accesstoken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
 	res.json({accessToken: accesstoken})
+})
+
+router.post("/api/register", (req, res,next) =>{
+	let user = req.body;
+
+  // bcrypting the password before saving
+	const rounds = process.env.BCRYPT_ROUNDS || 8; // 2 ^ 8
+	const hash = bcrypt.hashSync(user.password, rounds);
+
+  // never save the plain text password in the db
+	user.password = hash
+	
+	Users.add(user)
+    .then(saved => {
+      res.status(201).json({
+        message: `Great to have you, ${saved.username}`,
+      });
+    })
+    .catch(next); // our custom err handling middleware in server.js will trap this
 })
 
 

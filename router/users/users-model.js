@@ -1,13 +1,25 @@
-let users = [
-	{ id: "1", name: "Jane Doe" },
-	{ id: "2", name: "John Doe" },
-	{ id: "3", name: "Jack Doe" },
-]
-
-function getUsers() {
-	return users
-}
+const db = require("../../data/config")
 
 module.exports= {
-getUsers
+	add,
+    findBy,
 }
+
+async function add(user) {
+    const [id] = await db("users").insert(user);
+    return findById(id);
+  }
+  
+  function findBy(username) {
+    return db("users as u")
+      .select("u.id", "u.username")
+      .where(username);
+  }
+  
+  function findById(id) {
+    return db("users as u")
+      .select("u.id", "u.username")
+      .where("u.id", id)
+      .first();
+  }
+  
