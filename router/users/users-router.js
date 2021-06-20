@@ -4,6 +4,7 @@ const router = express.Router()
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const Users = require('../users/users-model');
+const {jwtSecret} = require('../../config/secrets')
 
 const posts = [
 	{
@@ -26,20 +27,34 @@ router.get('/api/posts' ,  authenticateToken,(req, res) => {
 	
 	
 })
-router.post("/api/login",(req, res) => {
-	
+// router.post("/api/login",(req, res,next) => {
+// 	let { username, password } = req.body;
+
+//   Users.findBy({ username }) // it would be nice to have middleware do this
+//     .then(([user]) => {
+//       if (user && bcrypt.compareSync(password, user.password)) {
+//         const token = authenticateToken(user)
+//         res.status(200).json({
+//           message: `Welcome back ${user.username}!`,
+//           token
+//         });
+//       } else {
+//         res.status(401).json({ message: 'Invalid Credentials' });
+//       }
+//     })
+//     .catch(next);
 	
 	//Authenticate User
-	const username = req.body.username
-	const user = {name: username}
+	// const username = req.body.username
+	// const password = req.body.password
+	// const user = {name: username, password:password}
 	
-	const accesstoken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-	res.json({accessToken: accesstoken})
-})
+	// const accesstoken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+	// res.json({accessToken: accesstoken})
+// })
 
 router.post("/api/register", (req, res,next) =>{
-	let user = req.body;
-
+	let user  = req.body;
   // bcrypting the password before saving
 	const rounds = process.env.BCRYPT_ROUNDS || 8; // 2 ^ 8
 	const hash = bcrypt.hashSync(user.password, rounds);
@@ -47,6 +62,7 @@ router.post("/api/register", (req, res,next) =>{
   // never save the plain text password in the db
 	user.password = hash
 	
+
 	Users.add(user)
     .then(saved => {
       res.status(201).json({
@@ -60,18 +76,26 @@ router.post("/api/register", (req, res,next) =>{
 
 
 
-function authenticateToken(req, res, next){
-	const authHeader = req.headers['authorization']
-	const token = authHeader && authHeader.split(' ')[1]
+function authenticateToken(user){
+	// const authHeader = req.headers['authorization']
+	// const token = authHeader && authHeader.split(' ')[1]
 	
-	if(token == null) return res.sendStatus(401)
+	// if(token == null) return res.sendStatus(401)
 	
-	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
-		if(err) return res.sendStatus(403)
-		req.user = user
-		next()
-	})
-	
+	// jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
+	// 	if(err) return res.sendStatus(403)
+	// 	req.user = user
+	// 	next()
+	// })
+	const payload = {
+		subject: user.id,
+		username: user.username,
+		// password: user.password,
+	}
+	const options = {
+		expiresIn: "500s"
+	  }
+	return jwt.sign(payload,jwtSecret,options)
 	
 }
 
