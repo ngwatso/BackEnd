@@ -27,31 +27,6 @@ router.get('/api/posts' ,  authenticateToken,(req, res) => {
 	
 	
 })
-// router.post("/api/login",(req, res,next) => {
-// 	let { username, password } = req.body;
-
-//   Users.findBy({ username }) // it would be nice to have middleware do this
-//     .then(([user]) => {
-//       if (user && bcrypt.compareSync(password, user.password)) {
-//         const token = authenticateToken(user)
-//         res.status(200).json({
-//           message: `Welcome back ${user.username}!`,
-//           token
-//         });
-//       } else {
-//         res.status(401).json({ message: 'Invalid Credentials' });
-//       }
-//     })
-//     .catch(next);
-	
-	//Authenticate User
-	// const username = req.body.username
-	// const password = req.body.password
-	// const user = {name: username, password:password}
-	
-	// const accesstoken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-	// res.json({accessToken: accesstoken})
-// })
 
 router.post("/api/register", (req, res,next) =>{
 	let user  = req.body;
@@ -77,16 +52,7 @@ router.post("/api/register", (req, res,next) =>{
 
 
 function authenticateToken(user){
-	// const authHeader = req.headers['authorization']
-	// const token = authHeader && authHeader.split(' ')[1]
 	
-	// if(token == null) return res.sendStatus(401)
-	
-	// jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
-	// 	if(err) return res.sendStatus(403)
-	// 	req.user = user
-	// 	next()
-	// })
 	const payload = {
 		subject: user.id,
 		username: user.username,
@@ -101,60 +67,3 @@ function authenticateToken(user){
 
 module.exports = router;
 
-// require('dotenv').config()
-// const express = require("express")
-// const router = express.Router()
-// const jwt = require('jsonwebtoken')
-
-// const posts = [
-// 	{
-// 		username: 'Lily',
-// 		title: 'Post 1',
-// 	},
-// 	{
-// 		username: 'Arely',
-// 		title: 'Post 2',
-// 	},
-// ]
-// router.get("/", (req, res) => {
-// 	res.status(200).json({
-// 		message: "Welcome to Pintereach-2"
-// 	})
-// })
-
-// router.get('/api/posts' ,  authenticateToken,(req, res) => {
-// 	res.json(posts.filter(post => post.username === req.user.name))
-	
-	
-// })
-// router.post("/api/login",(req, res) => {
-	
-	
-// 	//Authenticate User
-// 	const username = req.body.username
-// 	const user = {name: username}
-	
-// 	const accesstoken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-// 	res.json({accessToken: accesstoken})
-// })
-
-
-
-
-
-// function authenticateToken(req, res, next){
-// 	const authHeader = req.headers['authorization']
-// 	const token = authHeader && authHeader.split(' ')[1]
-	
-// 	if(token == null) return res.sendStatus(401)
-	
-// 	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
-// 		if(err) return res.sendStatus(403)
-// 		req.user = user
-// 		next()
-// 	})
-	
-	
-// }
-
-// module.exports = router;
