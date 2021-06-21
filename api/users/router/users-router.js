@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 const Users = require('../router/users-model');
 const checkCredentials = require('../../middleware/check-payload')
-const {jwtSecret} = require('../../../config/secrets')
+const secrets = require('../../../config/secrets')
 
 
 const posts = [
@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
 		message: "Welcome to Pintereach-2"
 	})
 })
-router.post("register", checkCredentials, (req, res,next) =>{
+router.post("/register", checkCredentials, (req, res,next) =>{
 	let user  = req.body;
   // bcrypting the password before saving
 	const rounds = process.env.BCRYPT_ROUNDS || 8; // 2 ^ 8
