@@ -23,6 +23,18 @@ router.get("/", (req, res) => {
 		message: "Welcome to Pintereach-2"
 	})
 })
+
+//trying this route to see if my database is working
+router.get("/api/users", async (req, res, next) => {
+	Users.find(Users) 
+	.then((Users) => {
+		res.status(200).json(Users)
+	})
+	.catch((error) => {
+		next(error)
+	})
+})
+
 router.post("/api/register", checkCredentials, (req, res,next) =>{
 	let user  = req.body;
   // bcrypting the password before saving
