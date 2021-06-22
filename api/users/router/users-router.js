@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
 		message: "Welcome to Pintereach-2"
 	})
 })
-router.post("/register", checkCredentials, (req, res,next) =>{
+router.post("/api/register", checkCredentials, (req, res,next) =>{
 	let user  = req.body;
   // bcrypting the password before saving
 	const rounds = process.env.BCRYPT_ROUNDS || 8; // 2 ^ 8
@@ -35,14 +35,17 @@ router.post("/register", checkCredentials, (req, res,next) =>{
 
 	Users.add(user)
     .then(saved => {
+		const token = authenticateToken(saved);
       res.status(201).json({
+
         message: `Great to have you, ${saved.username}`,
+        token
       });
     })
     .catch(next); // our custom err handling middleware in server.js will trap this
 })
 
-router.post("/login", checkCredentials, (req, res, next)=>{
+router.post("/api/login", checkCredentials, (req, res, next)=>{
 	let { username, password } = req.body;
 
   Users.findBy({ username: username }) // it would be nice to have middleware do this

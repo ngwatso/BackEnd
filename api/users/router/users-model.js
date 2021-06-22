@@ -13,7 +13,7 @@ async function add(user) {
   function findBy(username) {
     return db("users as u")
       .select("u.id", "u.username")
-      .where(username);
+      .where("u.username", username);
   }
   
   function findById(id) {
