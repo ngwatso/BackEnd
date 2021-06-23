@@ -5,7 +5,16 @@
   "author": "Lambda School",
   "scripts": {
     "server": "nodemon",
-    "start": "node index.js"
+    "start": "node index.js",
+    "migrate": "knex migrate:latest",
+    "rollback": "knex migrate:rollback",
+    "seed": "knex seed:run",
+    "migrateh": "heroku run knex migrate:latest -a pinte-reach-2",
+    "rollbackh": "heroku run knex migrate:rollback -a pinte-reach-2",
+    "databaseh": "heroku pg:psql -a pinte-reach-2",
+    "seedh": "heroku run knex seed:run -a pinte-reach-2",
+    "test": "cross-env NODE_ENV=testing jest --watchAll --verbose --runInBand",
+    "deploy": "git push heroku main"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -24,7 +33,8 @@
     "nodemon": "^2.0.7",
     "pg": "^8.6.0",
     "seed": "^0.4.4",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "supertest": "^6.1.3"
   },
   "devDependencies": {
     "eslint": "^7.28.0"
